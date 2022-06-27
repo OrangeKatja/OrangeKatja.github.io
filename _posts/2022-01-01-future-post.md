@@ -20,6 +20,7 @@ For better understanding, let's start with some information about X-rays and CT.
   </figcaption>
 </figure>
 
+<a id="fig:knee_ap_lat_1">
 ![](/images/knee_xray_ap_lat.jpg)
 {:.image-caption}
 * of a knee joint. Source:  [a](https://www.researchgate.net/figure/AP-and-lateral-X-ray-views-of-the-right-unaffected-knee_fig2_285656875)*
