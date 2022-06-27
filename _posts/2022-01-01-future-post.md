@@ -23,6 +23,8 @@ For better understanding, let's start with some information about X-rays and CT.
   </figcaption>
 </figure>
 
+[a](http://google.com)
+
 {% include image.html url="/images/knee_xray_ap_lat.jpg" description='Figure 1: frontal (left) and lateral (right) X-ray images of a knee joint. Source: <a href="https://www.researchgate.net/figure/AP-and-lateral-X-ray-views-of-the-right-unaffected-knee_fig2_285656875" ­target="_blank"­>[1]</a>' %}
 
 <a id="fig:knee_ap_lat_1">
