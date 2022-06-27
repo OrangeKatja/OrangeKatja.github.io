@@ -1,7 +1,7 @@
 ---
-title: 'Future Blog Post'
-date: 2199-01-01
-permalink: /posts/2012/08/blog-post-4/
+title: 'Explained: End-To-End Convolutional Neural Network for 3D Reconstruction of Knee Bones From Bi-Planar X-Ray Images'
+date: 2022-06-27
+permalink: /posts/2022/06/end-to-end/
 tags:
   - cool posts
   - category1
