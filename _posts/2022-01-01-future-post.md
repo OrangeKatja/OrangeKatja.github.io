@@ -16,7 +16,10 @@ For better understanding, let's start with some information about X-rays and CT.
 
 <figure id="fig:knee_ap_lat">
   <img src="/images/knee_xray_ap_lat.jpg" alt="my alt text"/>
-  <figcaption>Figure 1: frontal (left) and lateral (right) X-ray images of a knee joint. Source: <a href="https://www.researchgate.net/figure/AP-and-lateral-X-ray-views-of-the-right-unaffected-knee_fig2_285656875" ­target="_blank"­>[1]</a> [[a]](https://www.researchgate.net/figure/AP-and-lateral-X-ray-views-of-the-right-unaffected-knee_fig2_285656875)
+  <figcaption>Figure 1: frontal (left) and lateral (right) X-ray images of a knee joint. Source: <a href="https://www.researchgate.net/figure/AP-and-lateral-X-ray-views-of-the-right-unaffected-knee_fig2_285656875" ­target="_blank"­>[1]</a> 
+  
+  [a](https://www.researchgate.net/figure/AP-and-lateral-X-ray-views-of-the-right-unaffected-knee_fig2_285656875)
+  
   </figcaption>
 </figure>
 
