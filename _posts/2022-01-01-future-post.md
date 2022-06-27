@@ -15,17 +15,16 @@ Reconstructing the 3D structure of an object from one or more images is not only
 For better understanding, let's start with some information about X-rays and CT. To take an X-ray image, X-rays are sent through the object of interest and recorded on a film (on the detector) placed behind. Different tissues transmit different amounts of radiation. For example, the X-ray image is dark gray when it passes through water, while it is light gray for bones because little radiation passes through. On the X-ray image, bones, therefore, stand out clearly from the soft tissues (muscles, cartilage, etc.) surrounding them (see [figure 1](#fig:knee_ap_lat_1)).
 
 <figure id="fig:knee_ap_lat">
+  
   <img src="/images/knee_xray_ap_lat.jpg" alt="my alt text"/>
+  
   <figcaption>
   
   [\[a\]](https://www.researchgate.net/figure/AP-and-lateral-X-ray-views-of-the-right-unaffected-knee_fig2_285656875)
 
   </figcaption>
+
 </figure>
-
-[a](http://google.com)
-
-{% include image.html url="/images/knee_xray_ap_lat.jpg" description='Figure 1: frontal (left) and lateral (right) X-ray images of a knee joint. Source: <a href="https://www.researchgate.net/figure/AP-and-lateral-X-ray-views-of-the-right-unaffected-knee_fig2_285656875" ­target="_blank"­>[1]</a>' %}
 
 <a id="fig:knee_ap_lat_1">
 ![](/images/knee_xray_ap_lat.jpg)
