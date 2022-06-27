@@ -8,12 +8,11 @@ tags:
   - category2
 ---
 
-# Explained: End-To-End Convolutional Neural Network for 3D Reconstruction of Knee Bones From Bi-Planar X-Ray Images
-## Motivation
+# Motivation
 Reconstructing the 3D structure of an object from one or more images is not only interesting for 3D modeling, robotics, or animation, but also for medical diagnosis. When doctors know the 3D structure of a bone, they can choose the most appropriate implant and plan the surgery based on that information. Moreover they are able to even create a patient-specific implant or jigs (OP templates) adapted specifically to the bone. The 3D structure of a bone can be reconstructed with a computed tomography (CT) scan, yet this involves a much higher radiation exposure. It would therefore be very advantageous for the patient if one or more X-ray images were sufficient instead of a CT scan. A method for 3D reconstruction of the bones in the knee using two perpendicular X-ray images has been proposed by **[End-To-End Convolutional Neural Network for 3D Reconstruction of Knee Bones From Bi-Planar X-Ray Images, Kasten et al., 2020](https://arxiv.org/pdf/2004.00871.pdf)**. If you want to understand how this approach works, this blog post explains the method and results of the paper.
 
-### X-Ray and CT
-For better understanding, let's start with some information about X-rays and CT. To take an X-ray image, X-rays are sent through the object of interest and recorded on a film (on the detector) placed behind. Different tissues transmit different amounts of radiation. For example, the X-ray image is dark gray when it passes through water, while it is light gray for bones because little radiation passes through. On the X-ray image, bones, therefore, stand out clearly from the soft tissues (muscles, cartilage, etc.) surrounding them (see [figure 1](#fig:knee_ap_lat)).
+## X-Ray and CT
+For better understanding, let's start with some information about X-rays and CT. To take an X-ray image, X-rays are sent through the object of interest and recorded on a film (on the detector) placed behind. Different tissues transmit different amounts of radiation. For example, the X-ray image is dark gray when it passes through water, while it is light gray for bones because little radiation passes through. On the X-ray image, bones, therefore, stand out clearly from the soft tissues (muscles, cartilage, etc.) surrounding them (see [figure 1](#fig:knee_ap_lat_1)).
 
 <figure id="fig:knee_ap_lat">
   <img src="/images/knee_xray_ap_lat.jpg" alt="my alt text"/>
@@ -21,6 +20,9 @@ For better understanding, let's start with some information about X-rays and CT.
   </figcaption>
 </figure>
 
+{% figure [caption:"igure 1: frontal (left) and lateral (right) X-ray images of a knee joint. Source: <a href="https://www.researchgate.net/figure/AP-and-lateral-X-ray-views-of-the-right-unaffected-knee_fig2_285656875" ­target="_blank"­>[1]</a> [a](https://www.researchgate.net/figure/AP-and-lateral-X-ray-views-of-the-right-unaffected-knee_fig2_285656875)"] [id:"fig:knee_ap_lat_1"] %}
+![Editing a markdown file for a talk](/images/knee_xray_ap_lat.jpg)
+{% endfigure %}
 
 In contrast to an X-ray, where only one image is taken, a CT involves taking multiple X-ray images through a rotating X-ray tube. The different images, taken from different angles, are then postprocessed to create a slice image (tomographic image). Thus we can imagine to have an X-ray-like image of every slice. So, as shown in the [figure 2](#fig:knee_ct), a CT scan can be used to obtain slices of the bone.
 
@@ -32,8 +34,8 @@ In contrast to an X-ray, where only one image is taken, a CT involves taking mul
 
 For this reason, X-ray is not only cheaper and more widely available but the patient is also exposed to less ionizing radiation, which reduces the implied cancer risk compared to CT. For example, a chest X-ray exposes the patient to only 0.1 mSv, compared to 7 mSv for CT ([source](https://www.health.harvard.edu/cancer/radiation-risk-from-medical-imaging)). For comparison, in Germany, the average natural radiation exposure is 2.1 mSv per year and the limit for radiation protection personnel is 20 mSv per year ([source](https://www.admnucleartechnologies.com.au/blog/what-safe-level-radiation-exposure)). A CT scan should therefore only be performed if there is a clear medical indication and, if possible, an X-ray should be preferred.
 
-## Method
-### Input and Output
+# Method
+## Input and Output
 As a reminder, the goal of the paper is to reconstruct the 3D structure of bones from two perpendicular X-ray images. This is shown in [figure 3](#fig:input_output): The two X-ray images in the background are the input and the 3D models of the bones (colored 3D structures) are the desired output. One X-ray is taken from the front (AP), i.e. with the back to the detector, and one from the side (lateral), i.e. with the body side to the detector. The resulting AP and lateral knee X-ray images are shown in [figure 1](#fig:knee_ap_lat). 
 
 <figure id="fig:input_output">
@@ -52,10 +54,10 @@ The goal is to perform a semantic 3D segmentation of the volume, i.e. predicting
   ­target="_blank"­>[4]</a></figcaption>
 </figure>
 
-### Architecture
+## Architecture
 As you just saw in [figure 4](#fig:input_output), a convolutional neural network (CNN) is used for 3D segmentation. If you already know about CNNs, you can skip the next section and go directly to the network architecture. Otherwise, the following section will give you some background knowledge.
 
-#### CNN
+### CNN
 A convolutional neural network (CNN) is a neural network that uses convolutional layers. In general, a neural network consists of neurons organized into layers, and each neuron has a learnable bias and weight. If you want to know more about neural networks, I recommend [this blog post](https://ujjwalkarn.me/2016/08/09/quick-intro-neural-networks/). 
 
 The most important parts of a CNN are the so-called convolutional layers. Let's take a look at what a convolutional layer does: Its goal is to extract features from the input, such as detecting edges. To do this, it uses a small square called the kernel, that contains multiple weights. For convolution, the image is multiplied by the kernel (element-wise dot product) to compute the convolved feature, also called "feature map". A visualization of convolution can be seen in [figure 5](#fig:convolution). As the kernel (in yellow) moves over the image, the pixels underneath are added with the weights (small red multipliers) and the sum is entered into the feature map. The kernel moves once over all pixels and its weights of the kernel are learned during training by the CNN.
@@ -90,7 +92,7 @@ Another important component of CNN are the pooling layers. Their purpose is to r
   ­target="_blank"­>[7]</a></figcaption>
 </figure>
 
-#### Network Architecture
+### Network Architecture
 The architecture of the network is inspired by the [V-Net](https://campar.in.tum.de/pub/milletari2016Vnet/milletari2016Vnet.pdf). We will therefore first take a look at the V-Net and how it performs volumetric convolution before looking at how it differs from the mesh used. A visualization of the architecture of the V-Net can be seen in [figure 9](#fig:vnet). The left part of the network compresses the data, while the right part decompresses the data to its original size. In this sense, it is similar to the [U-net](https://arxiv.org/pdf/1505.04597.pdf), which is popular for segmenting medical images. 
 
 <figure id="fig:vnet">
@@ -129,7 +131,7 @@ The architecture of the network in the paper deviates slightly from that of the 
   ­target="_blank"­>[4]</a></figcaption>
 </figure>
 
-### Training
+## Training
 X-ray images with associated 3D ground truth segmentation are required for training. Since pairs of X-ray images and CT reconstructions are rare and geometric alignment is non-trivial, synthetic X-ray images are used instead. These digitally reconstructed radiographs (DRR) are created by casting rays through a volume. During the ray trajectory, the attenuation coefficients of the voxels are integrated and projected onto the image plane. The basic idea is shown in [figure 13](#fig:drr). Thus, a corresponding X-ray image can be generated from a labeled CT scan. 
 
 <figure id="fig:drr">
@@ -165,11 +167,11 @@ You may have wondered whether real and artificial X-ray images really look the s
 </figure>
 
 
-## Evaluation & Results
+# Evaluation & Results
 
 To understand the evaluation, we first take a look at the metrics, the approaches against which the result is compared, and the test data used. This gives us the necessary context to understand the evaluation results. 
 
-### Metrics
+## Metrics
 Two metrics are used to evaluate the data: the Chamfer distance in mm and the Dice coefficient. The chamfer distance describes the average distance to the nearest feature in the ground truth. Therefore, the smaller the Chamfer distance the better. 
 
 The dice coefficient is calculated for each class on the voxels by dividing two times the overlap of the voxels by the number of class voxels in the prediction and the ground truth (see [figure 17](#fig:dice)). So a perfect prediction would give 1, and we can say the higher the Dice coefficient, the better. 
@@ -179,7 +181,7 @@ The dice coefficient is calculated for each class on the voxels by dividing two 
   ­target="_blank"­>[12]</a></figcaption>
 </figure>
 
-### Statistical Shape Models
+## Statistical Shape Models
 The paper's authers compare their results to other methods: one based on statistical shape models (SSM) and another approach also based on a CNN. Before Deep Learning was used for 3D bone reconstruction, SSM or statistical shape and intensity models (SSIM) were the most popular method. The idea is that given enough examples, we know what the average bone looks like. And similar to creating phantom images, variations are tried until the structure of the bone in question is mapped as accurately as possible. Just as the shape of the eyes can be varied when creating a phantom image, for example, the size of the femur, or the angle of the head to the shaft can be varied (see [figure 18](#fig:ssm_femur)). A disadvantage of the method is that it depends heavily on the initialization and also takes quite a lot of time.
 
 <figure id="fig:ssm_femur">
@@ -188,10 +190,10 @@ The paper's authers compare their results to other methods: one based on statist
   ­target="_blank"­>[13]</a></figcaption>
 </figure>
 
-### Test data
+## Test data
 The evaluation is performed a) with CT scans and DRRs, as well as b) with real X-ray images. 
 
-#### DRR test results
+### DRR test results
 The DRRs are created using a test set of 20 CT scans. The DRR pairs are used as input and the CT scans as ground truth. The Marching Cubes algorithm is used to create a set of 3D bone meshes from the segmentation map. The metrics are calculated using the reconstructions (not the segmentation map). The results are shown in the table. As we can see, the average distance to the bones is about 1.3 mm and we have an average Dice score of 0.9. 
 
 |              |   | Background | Femur | Patella | Tibia | Fibula | Bones average |  
@@ -199,7 +201,7 @@ The DRRs are created using a test set of 20 CT scans. The DRR pairs are used as 
 | **Chamfer (mm)** |   | -          | 1.075 | 1.709   | 1.175 | 1.218  | 1.294     |
 | **Dice**         |   | 0.986      | 0.943 | 0.894   | 0.945 | 0.848  | 0.907     | 
 
-#### Real X-rays test results. 
+### Real X-rays test results. 
 The real-world data set consisted of 28 pairs of X-rays. Since no 3D ground truth data was available, they had experts segment the X-ray images. They then projected the 3D model onto the X-ray images and compared the edges to the ground truth masks. So this time the Chamfer distance does not refer to the 3D distance, but to the 2D distance on the X-ray image. 
 
 For the SSIM model from [Gp-gpu accelerated intensity-based 2d/3d registration pipeline. In: Proceedings of Shape Symposium. Klima, et al., 2015](https://www.fit.vut.cz/research/publication-file/10928/GP-GPU_ACCELERATED_INTENSITY-BASED_2D-3D_REGISTRATION_PIPELINE.pdf), only the code for the femur was available. A manual initialization was performed (see in the table "manual"). Some random perturbations were applied later to the initialization to test the sensitivity of the model (see table "perturbed"). The perturbation impacted the performance, the convergence rate (34% did not converge at all), and the convergence time. 
@@ -217,7 +219,7 @@ As we can see in the table, the presented approach achieved a higher Dice and a 
 | **Convergence time (s)** |   | 4.88       | 6.05      | -            | 0.5             |         |        |        |            |
 
 
-## Discussion
+# Discussion
 The presented paper has shown a method for 3D reconstruction of bones using 2D X-ray images. However, 3D shape reconstruction is not limited to the medical field. Major breakthroughs in 3D objection reconstruction of single or multiple images have been achieved by [Pix2Vox](https://arxiv.org/pdf/1901.11153v2.pdf) and [Pix2Vox++](https://arxiv.org/pdf/2006.12250v2.pdf). If you are more interested, I recommend you to read the papers or get your hands dirty and have a look at the official [repository](https://github.com/hzxie/Pix2Vox). 
 
 One aspect that I particularly like about the approach presented is that the method is based on only two X-ray images, which are also taken in everyday clinical practice. This ensures that it is easy to integrate. I think this can not only help doctors in surgery planning, but in combination with other methods such as 2D-3D registration, it can also be used to measure other parameters such as implant migration.  
@@ -226,7 +228,7 @@ One problem I noticed while doing research for this blog post, which is common e
 
 Lastly, I would like to point out a great paper that also reconstructed the 3D structure of bones using X-ray images: [2D-3D reconstruction of distal forearm bone from actual X-ray images of the wrist using convolutional neural networks, Shiode et al., 2021](https://www.nature.com/articles/s41598-021-94634-2.pdf). The special thing is that the reconstructed bones are the bones of the hand wrist, which are very small (especially compared to the bones in the knee). This approach is also based on CNNs and achieved accuracies of 1.05 mm. If you are now wondering how many bones you would have to reconstruct if you wanted the 3D bone structure of all your bones, the answer is circa 206. 
 
-## Image References
+# Image References
 [1] Chiu et al. "Isolated Proximal Tibiofibular Dislocation during Soccer." Case Reports in Emergency Medicine 2015(6):1-3 (2015). https://www.researchgate.net/publication/285656875_Isolated_Proximal_Tibiofibular_Dislocation_during_Soccer
 
 [2] Manjula et al. “Role of 3 D CT in Evaluation of Tibial Plateau Fractures.” (2015). https://www.semanticscholar.org/paper/Role-of-3-D-CT-in-Evaluation-of-Tibial-Plateau-Manjula-Venkataratnam/04a66d5da8fdaea3d591ee7192c70358875498d7/figure/1
