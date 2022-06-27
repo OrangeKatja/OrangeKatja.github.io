@@ -20,7 +20,7 @@ For better understanding, let's start with some information about X-rays and CT.
   
   <figcaption>
   
-  [\[a\]](https://www.researchgate.net/figure/AP-and-lateral-X-ray-views-of-the-right-unaffected-knee_fig2_285656875)
+  [a](https://www.researchgate.net/figure/AP-and-lateral-X-ray-views-of-the-right-unaffected-knee_fig2_285656875)
 
   </figcaption>
 
