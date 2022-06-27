@@ -20,9 +20,11 @@ For better understanding, let's start with some information about X-rays and CT.
   </figcaption>
 </figure>
 
-{% figure [caption:"igure 1: frontal (left) and lateral (right) X-ray images of a knee joint. Source: <a href="https://www.researchgate.net/figure/AP-and-lateral-X-ray-views-of-the-right-unaffected-knee_fig2_285656875" ­target="_blank"­>[1]</a> [a](https://www.researchgate.net/figure/AP-and-lateral-X-ray-views-of-the-right-unaffected-knee_fig2_285656875)"] [id:"fig:knee_ap_lat_1"] %}
-![Editing a markdown file for a talk](/images/knee_xray_ap_lat.jpg)
-{% endfigure %}
+<figure id="fig:knee_ap_lat">
+  <img src="/images/knee_xray_ap_lat.jpg" alt="my alt text"/>
+  <figcaption>Figure 1: frontal (left) and lateral (right) X-ray images of a knee joint. Source: <a href="https://www.researchgate.net/figure/AP-and-lateral-X-ray-views-of-the-right-unaffected-knee_fig2_285656875" ­target="_blank"­>[1]</a> [a](https://www.researchgate.net/figure/AP-and-lateral-X-ray-views-of-the-right-unaffected-knee_fig2_285656875)
+  </figcaption>
+</figure>
 
 In contrast to an X-ray, where only one image is taken, a CT involves taking multiple X-ray images through a rotating X-ray tube. The different images, taken from different angles, are then postprocessed to create a slice image (tomographic image). Thus we can imagine to have an X-ray-like image of every slice. So, as shown in the [figure 2](#fig:knee_ct), a CT scan can be used to obtain slices of the bone.
 
