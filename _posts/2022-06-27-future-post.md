@@ -8,10 +8,10 @@ tags:
 ---
 
 # Motivation
-Reconstructing the 3D structure of an object from one or more images is not only interesting for 3D modeling, robotics, or animation, but also for medical diagnosis. When doctors know the 3D structure of a bone, they can choose the most appropriate implant and plan the surgery based on that information. Moreover they are able to even create a patient-specific implant or jigs (OP templates) adapted specifically to the bone. The 3D structure of a bone can be reconstructed with a computed tomography (CT) scan, yet this involves a much higher radiation exposure. It would therefore be very advantageous for the patient if one or more X-ray images were sufficient instead of a CT scan. A method for 3D reconstruction of the bones in the knee using two perpendicular X-ray images has been proposed by [End-To-End Convolutional Neural Network for 3D Reconstruction of Knee Bones From Bi-Planar X-Ray Images, Kasten et al., 2020](https://arxiv.org/pdf/2004.00871.pdf). If you want to understand how this approach works, this blog post explains the method and results of the paper.
+Reconstructing the 3D structure of an object from one or more images is not only interesting for 3D modeling, robotics, or animation, but also for medical diagnosis. When doctors know the 3D structure of a bone, they can choose the most appropriate implant and plan the surgery based on that information. Moreover they are able to even create a patient-specific implant or jigs (OP templates) adapted specifically to the bone. The 3D structure of a bone can be reconstructed with a computed tomography (CT) scan, yet this involves a much higher ionizing radiation exposure. It would therefore be very advantageous for the patient if one or more X-ray images were sufficient instead of a CT scan. A method for 3D reconstruction of the bones in the knee using two perpendicular X-ray images has been proposed by [Kasten et al. "End-To-End Convolutional Neural Network for 3D Reconstruction of Knee Bones From Bi-Planar X-Ray Images." (2020)](https://arxiv.org/pdf/2004.00871.pdf). If you want to understand how the approach works, this blog post explains the method and results of the paper.
 
 ## X-Ray and CT
-For better understanding, let's start with some information about X-rays and CT. To take an X-ray image, X-rays are sent through the object of interest and recorded on a film (on the detector) placed behind. Different tissues transmit different amounts of radiation. For example, the X-ray image is dark gray when it passes through water, while it is light gray for bones because little radiation passes through. On the X-ray image, bones, therefore, stand out clearly from the soft tissues (muscles, cartilage, etc.) surrounding them (see [figure 1](#fig:knee_ap_lat_1)).
+For better understanding, let's start with some information about X-ray images and CT scans. To take an X-ray image, X-rays are sent through the object of interest and recorded on a film (the detector) placed behind. Different tissues transmit different amounts of radiation. For example, the X-ray image is dark gray when it passes through water, while it is light gray for bones because little radiation passes through. On the X-ray image, bones, therefore, stand out clearly from the soft tissues (muscles, cartilage, etc.) surrounding them (see [figure 1](#fig:knee_ap_lat_1)).
 
 <figure id="fig:knee_ap_lat">
   <img src="/images/knee_xray_ap_lat.jpg" alt="Frontal (left) and lateral (right) X-ray images of a knee joint" style="width:80%"/>
@@ -25,7 +25,7 @@ In contrast to an X-ray, where only one image is taken, a CT involves taking mul
   <figcaption>Figure 2: CT views and 3D model of a knee joint with a tibial fracture. Source: Based on [2]</figcaption>
   </figure>
 
-For this reason, X-ray is not only cheaper and more widely available but the patient is also exposed to less ionizing radiation, which reduces the implied cancer risk compared to CT. For example, a chest X-ray exposes the patient to only 0.1 mSv, compared to 7 mSv for CT ([source](https://www.health.harvard.edu/cancer/radiation-risk-from-medical-imaging)). For comparison, in Germany, the average natural radiation exposure is 2.1 mSv per year and the limit for radiation protection personnel is 20 mSv per year ([source](https://www.admnucleartechnologies.com.au/blog/what-safe-level-radiation-exposure)). A CT scan should therefore only be performed if there is a clear medical indication and, if possible, an X-ray should be preferred.
+For this reason, X-ray images are not only cheaper and more widely available but the patient is also exposed to less ionizing radiation, which reduces the implied cancer risk compared to CT scan. For example, a chest X-ray image exposes the patient to only 0.1 mSv, compared to 7 mSv for a CT scan ([source](https://www.health.harvard.edu/cancer/radiation-risk-from-medical-imaging)). For comparison, in Germany, the average natural radiation exposure is 2.1 mSv per year ([source](https://www.bfs.de/EN/topics/ion/environment/natural-radiation/natural-radiation.html)) and the limit for radiation worker is 20 mSv per year ([source](https://www.admnucleartechnologies.com.au/blog/what-safe-level-radiation-exposure)). A CT scan should therefore only be performed if there is a clear medical indication and, if possible, an X-ray image should be preferred.
 
 # Method
 ## Input and Output
@@ -46,21 +46,20 @@ The goal is to perform a semantic 3D segmentation of the volume, i.e. predicting
 </figure>
 
 ## Architecture
-As you just saw in [figure 4](#fig:input_output), a convolutional neural network (CNN) is used for 3D segmentation. If you already know about CNNs, you can skip the next section and go directly to the network architecture. Otherwise, the following section will give you some background knowledge.
+As you just saw in [figure 4](#fig:input_output), a convolutional neural network (CNN) is used for 3D segmentation. If you already know about CNNs, you can skip the next section and go directly to the network architecture. Otherwise, the following section will provide you some background knowledge.
 
 ### CNN
 A convolutional neural network (CNN) is a neural network that uses convolutional layers. In general, a neural network consists of neurons organized into layers, and each neuron has a learnable bias and weight. If you want to know more about neural networks, I recommend [this blog post](https://ujjwalkarn.me/2016/08/09/quick-intro-neural-networks/). 
 
-The most important parts of a CNN are the so-called convolutional layers. Let's take a look at what a convolutional layer does: Its goal is to extract features from the input, such as detecting edges. To do this, it uses a small square called the kernel, that contains multiple weights. For convolution, the image is multiplied by the kernel (element-wise dot product) to compute the convolved feature, also called "feature map". A visualization of convolution can be seen in [figure 5](#fig:convolution). As the kernel (in yellow) moves over the image, the pixels underneath are added with the weights (small red multipliers) and the sum is entered into the feature map. The kernel moves once over all pixels and its weights of the kernel are learned during training by the CNN.
+The most important parts of a CNN are the so-called convolutional layers. Let's take a look at what a convolutional layer does: Its goal is to extract features from the input, such as detecting edges. To do this, it uses a small square called the kernel, that contains multiple weights. For convolution, the image is multiplied by the kernel (element-wise dot product) to compute the convolved feature, also called "feature map". A visualization of convolution can be seen in [figure 5](#fig:convolution). As the kernel (in yellow) moves over the image, the pixels underneath are multiplied with the weights (small red numbers) and the sum is entered into the feature map. The kernel moves once over all pixels and the weights of the kernel are learned during training by the CNN.
 
-<p align="center">
 <figure id="fig:convolution">
   <img src="/images/convolution.gif" alt="Convolution of a 5x5 image with a 3x3 kernel to get a 3x3 feature map" style="width:60%"/>
   <figcaption>Figure 5: Convolution of a 5x5 image with a 3x3 kernel to get a 3x3 feature map. Source: [5]</figcaption>
 </figure>
-</p>
 
-In order to be able to convolve the outer pixels as well, additional pixels can be inserted around the image. This is called padding and is shown as a white pixel in [figure 6](#fig:stride). Also, we don't need to apply the kernel to every pixel, but only to every second pixel, for example. This is called the stride and describes the number of pixels we move in the input matrix. A higher stride results in a smaller feature map, as we see in [figure 6](#fig:stride). Because of the stride of two, one pixel is always skipped there.
+
+In order to be able to convolve the outer pixels as well, additional pixels can be inserted around the image e.g. with value zero. This is called padding and is shown as white pixels in [figure 6](#fig:stride). Also, we don't need to apply the kernel to every pixel, but only to every second pixel, for example. This is called the stride and describes the number of pixels we move in the input matrix. A higher stride results in a smaller feature map, as we see in [figure 6](#fig:stride). Because of the stride of two, one pixel is always skipped there.
 
 <figure id="fig:stride">
   <img src="/images/stride.gif" alt="Convolution with padding (white pixel) and a stride of length two" style="width:60%"/>
@@ -74,7 +73,7 @@ After each convolution, we apply the so-called activation function. This is a fu
   <figcaption>Figure 7: Activation functions: ReLU (left), LeakyReLU (middle) and PReLU (right). Source: [6]</figcaption>
 </figure>
 
-Another important component of CNN are the pooling layers. Their purpose is to reduce the parameters of the image and thus the overall computation of the network. A common pooling technique is max-pooling, which is visualized in [figure 8](#fig:maxpool). Again, we use a square, but instead of computing the weighted sum, we take the largest element. Thus, we can reduce the resolution and remember only the most important element. I don't want to get into that any further, but if you want to learn more about CNNs, pooling techniques, etc., I recommend the following blog posts, which I have also used as resources ([here](https://poloclub.github.io/cnn-explainer/), [here](https://medium.com/@RaghavPrabhu/understanding-of-convolutional-neural-network-cnn-deep-learning-99760835f148), [here](https://ujjwalkarn.me/2016/08/11/intuitive-explanation-convnets/))
+Another important component of CNN are the pooling layers. Their purpose is to reduce the parameters of the image and thus the overall computation of the network. A common pooling technique is max-pooling, which is visualized in [figure 8](#fig:maxpool). Again, we use a filter, but instead of computing the weighted sum, we take the largest element. Thus, we can reduce the resolution and keep only the most important element. I don't want to get into that any further, but if you want to learn more about CNNs, pooling techniques, etc., I recommend the following blog posts, which I have also used as resources ([here](https://poloclub.github.io/cnn-explainer/), [here](https://medium.com/@RaghavPrabhu/understanding-of-convolutional-neural-network-cnn-deep-learning-99760835f148), [here](https://ujjwalkarn.me/2016/08/11/intuitive-explanation-convnets/))
 
 <figure id="fig:maxpool">
   <img src="/images/maxpool.png" alt="Max pooling with stride 2 and a 2x2 filter" style="width:80%"/>
@@ -98,7 +97,7 @@ Let's first take a look at the left part of the model. We start with a single-ch
 
 You may have noticed that the input is not only used for the convolutional layers, but is also added to the output of the last convolutional layer of the stage. The goal of this architecture is for each stage to learn a residual function. Thus, it is not the output that is learned, but what is missing from the input (residual). It has been shown that this architecture is much faster. If you want to learn more about residual blocks and the mathematical background, read the [paper](https://arxiv.org/pdf/1512.03385.pdf) or [this blog post](https://towardsdatascience.com/residual-blocks-building-blocks-of-resnet-fd90ca15d6ec).
 
-The goal of the right part of the model is to project the extracted features back onto the pixel space. Instead of scaling the input down, we now scale it up and learn where the features are located. So the further up we go, the higher the resolution and the lower the number of channels. For upsampling, deconvolution is performed at the end of each stage. The process is illustrated in [figure 11](#fig:deconv): the resolution is increased by projecting each input voxel to a larger region by the kernel. In our model we also see that residual functions continue to be learned and the number of channels is halved at each stage. 
+The goal of the right part of the model is to project the extracted features back onto the pixel space. Instead of scaling the input down, we now scale it up and focus on where the features are located. So the further up we go, the higher the resolution and the lower the number of channels. For upsampling, deconvolution is performed at the end of each stage. The process is illustrated in [figure 11](#fig:deconv): the resolution is increased by projecting each input voxel to a larger region by the kernel. In our model we also see that residual functions continue to be learned and the number of channels is halved at each stage. 
 
 <figure id="fig:deconv">
   <img src="/images/deconv.png" alt="Convolution and Deconvolution of a 3D volume"/>
@@ -109,7 +108,7 @@ One thing is still missing: The horizontal connections. These forward the extrac
 
 Looking at the V-Net, the last step is to perform a convolution with a 1x1x1 filter and apply the softmax function voxel-wise. The softmax function normalizes the output so that it can be interpreted as class probabilities. By selecting the class with the highest probability, a 3D semantic segmentation of the volume is archived.
 
-The architecture of the network in the paper deviates slightly from that of the V-Net and is shown in (#fig:architecture). First of all, for the convolution a 3x3x3 kernel (instead of 5x5x5) is used. The number of channels is also different, both in the input and in the stages. Also, instead of convolution, max-pooling is used for downsampling. The five output channels represent the five output classes (four bone types and background).
+The architecture of the network in the paper deviates slightly from that of the V-Net and is shown in [figure 12](#fig:architecture). First of all, for the convolution a 3x3x3 kernel (instead of 5x5x5) is used. The number of channels is also different, both in the input and in the stages. Also, instead of convolution, max-pooling is used for downsampling. The five output channels represent the five output classes (four bone types and background).
 
 <figure id="fig:architecture">
   <img src="/images/architecture.png" alt="Architecture of the presented network"/>
@@ -155,10 +154,10 @@ To understand the evaluation, we first take a look at the metrics, the approache
 ## Metrics
 Two metrics are used to evaluate the data: the Chamfer distance in mm and the Dice coefficient. The chamfer distance describes the average distance to the nearest feature in the ground truth. Therefore, the smaller the Chamfer distance the better. 
 
-The dice coefficient is calculated for each class on the voxels by dividing two times the overlap of the voxels by the number of class voxels in the prediction and the ground truth (see [figure 17](#fig:dice)). So a perfect prediction would give 1, and we can say the higher the Dice coefficient, the better. 
+The Dice coefficient is calculated for each class on the voxels by dividing two times the overlap of the voxels by the number of class voxels in the prediction and the ground truth (see [figure 17](#fig:dice)). So a perfect prediction would give 1, and we can say the higher the Dice coefficient, the better. 
 <figure id="fig:dice">
   <img src="/images/dice.png" alt="Illustration of dice coefficient" style="width:60%"/>
-  <figcaption> Figure 17: Illustration of dice coefficient: 2 * X ∩ Y / (|X| + |Y|). Source: [13]</figcaption>
+  <figcaption> Figure 17: Illustration of Dice coefficient: 2 * X ∩ Y / (|X| + |Y|). Source: [13]</figcaption>
 </figure>
 
 ## Statistical Shape Models
@@ -173,7 +172,7 @@ The paper's authers compare their results to other methods: one based on statist
 The evaluation is performed a) with CT scans and DRRs, as well as b) with real X-ray images. 
 
 ### DRR test results
-The DRRs are created using a test set of 20 CT scans. The DRR pairs are used as input and the CT scans as ground truth. The Marching Cubes algorithm is used to create a set of 3D bone meshes from the segmentation map. The metrics are calculated using the reconstructions (not the segmentation map). The results are shown in the table. As we can see, the average distance to the bones is about 1.3 mm and we have an average Dice score of 0.9. 
+The DRRs are created using a test set of 20 CT scans. The DRR pairs are used as input and the CT scans as ground truth. The [Marching Cubes algorithm](https://www.researchgate.net/publication/202232897_Marching_Cubes_A_High_Resolution_3D_Surface_Construction_Algorithm) is used to create a set of 3D bone meshes from the segmentation map. The metrics are calculated using the reconstructions (not the segmentation map). The results are shown in the table. As we can see, the chamfer distance to the bones is about 1.3 mm and we have an average Dice score of 0.9. 
 
 |              | Background | Femur | Patella | Tibia | Fibula | Bones average |  
 |--------------|------------|-------|---------|-------|--------|---------------|
@@ -181,13 +180,13 @@ The DRRs are created using a test set of 20 CT scans. The DRR pairs are used as 
 | **Dice**         | 0.986      | 0.943 | 0.894   | 0.945 | 0.848  | 0.907     | 
 
 ### Real X-rays test results. 
-The real-world data set consisted of 28 pairs of X-rays. Since no 3D ground truth data was available, they had experts segment the X-ray images. They then projected the 3D model onto the X-ray images and compared the edges to the ground truth masks. So this time the Chamfer distance does not refer to the 3D distance, but to the 2D distance on the X-ray image. 
+The real-world data set consisted of 28 pairs of X-rays. Since no 3D ground truth data was available, they had experts segment the X-ray images. They then projected the 3D model onto the X-ray images and compared the edges to the ground truth masks. So this time the Chamfer distance and the Dice coefficient does not refer to the 3D distance/volume, but to the 2D distance/area on the X-ray image. 
 
-For the SSIM model from [Gp-gpu accelerated intensity-based 2d/3d registration pipeline. In: Proceedings of Shape Symposium. Klima et al., 2015](https://www.fit.vut.cz/research/publication-file/10928/GP-GPU_ACCELERATED_INTENSITY-BASED_2D-3D_REGISTRATION_PIPELINE.pdf), only the code for the femur was available. A manual initialization was performed (see in the table "manual"). Some random perturbations were applied later to the initialization to test the sensitivity of the model (see table "perturbed"). The perturbation impacted the performance, the convergence rate (34% did not converge at all), and the convergence time. 
+For the SSIM model from [Klima et al. "Gp-gpu accelerated intensity-based 2d/3d registration pipeline. In: Proceedings of Shape Symposium." (2015)](https://www.fit.vut.cz/research/publication-file/10928/GP-GPU_ACCELERATED_INTENSITY-BASED_2D-3D_REGISTRATION_PIPELINE.pdf), only the code for the femur was available. A manual initialization was performed (see in the table "manual"). Some random perturbations were applied later to the initialization to test the sensitivity of the model (see table "perturbed"). The perturbation impacted the performance, the convergence rate (34% did not converge at all), and the convergence time. 
 
 The results are also compared with [Chen et al. "Using Bi-planar X-Ray Images to Reconstruct the Spine Structure by the Convolution Neural Network." (2020)](https://www.springerprofessional.de/en/using-bi-planar-x-ray-images-to-reconstruct-the-spine-structure-/17218070). The approach uses 2D convolutional layers to extract a feature vector and then decodes it with 3D convolutional layers for 3D reconstruction. It was originally developed and tested for simulated X-ray images of a single vertebra.  
 
-As we can see in the table, the presented approach achieved a higher Dice and a smaller 2D Chamfer distance. Moreover, no initialization was required and it converged faster than the SSIM model (no time was given for the other CNN approach). The same data was used to evaluate all three approaches.
+As we can see in the table, the presented approach achieved a higher Dice coefficient and a smaller 2D Chamfer distance. Moreover, no initialization was required and it converged faster than the SSIM model (no time was given for the other CNN approach). The same data was used to evaluate all three approaches.
 
  |              | Femur SSIM |           | Chen et al, 2020 | Result of the paper |         |        |        |            |
 |--------------|------------|-----------|--------------|-----------------|---------|--------|--------|------------|
@@ -200,11 +199,22 @@ As we can see in the table, the presented approach achieved a higher Dice and a 
 # Discussion
 The presented paper has shown a method for 3D reconstruction of bones using 2D X-ray images. However, 3D shape reconstruction is not limited to the medical field. Major breakthroughs in 3D objection reconstruction of single or multiple images have been achieved by [Pix2Vox](https://arxiv.org/pdf/1901.11153v2.pdf) and [Pix2Vox++](https://arxiv.org/pdf/2006.12250v2.pdf). If you are more interested, I recommend you to read the papers or get your hands dirty and have a look at the official [repository](https://github.com/hzxie/Pix2Vox). 
 
-One aspect that I particularly like about the approach presented is that the method is based on only two X-ray images, which are also taken in everyday clinical practice. This ensures that it is easy to integrate. I think this can not only help doctors in surgery planning, but in combination with other methods such as 2D-3D registration, it can also be used to measure other parameters such as implant migration.  
+One aspect that I particularly liked about the approach presented is that the method is based on only two X-ray images, which are also taken in everyday clinical practice. This ensures that it is easy to integrate. I think this can not only help doctors in surgery planning, but in combination with other methods such as 2D-3D registration, it can also be used to measure other parameters such as implant migration.  
 
 One problem I noticed while doing research for this blog post, which is common especially in the context of medical data, is the lack of common data sets and metrics. This makes it difficult to compare results from different approaches. A consistent standard of which metric is used and shared datasets would be helpful here and would allow benchmarks.
 
-Lastly, I would like to point out a great paper that also reconstructed the 3D structure of bones using X-ray images: [2D-3D reconstruction of distal forearm bone from actual X-ray images of the wrist using convolutional neural networks, Shiode et al., 2021](https://www.nature.com/articles/s41598-021-94634-2.pdf). The special thing is that the reconstructed bones are the bones of the hand wrist, which are very small (especially compared to the bones in the knee). This approach is also based on CNNs and achieved accuracies of 1.05 mm. If you are now wondering how many bones you would have to reconstruct if you wanted the 3D bone structure of all your bones, the answer is circa 206. 
+Lastly, I would like to point out a great paper recently published in Nature that also reconstructed the 3D structure of bones using X-ray images: [Shiode et al. "2D-3D reconstruction of distal forearm bone from actual X-ray images of the wrist using convolutional neural networks." (2021)](https://www.nature.com/articles/s41598-021-94634-2.pdf). The special thing is that the reconstructed bones are the bones of the hand wrist, which are very small (especially compared to the bones in the knee). This approach is also based on a CNN and achieved accuracies of 1.05 mm. If you are now wondering how many bones do you need to reconstruct to have a complete 3D model of your skeleton​, the answer is circa 206. 
+
+# References
+
+* Kasten et al. "End-to-end convolutional neural network for 3D reconstruction of knee bones from bi-planar X-ray images." International Workshop on Machine Learning for Medical Image Reconstruction. Springer, Cham (2020). [https://arxiv.org/pdf/2004.00871.pdf](https://arxiv.org/pdf/2004.00871.pdf)
+* Milletari et al. "V-net: Fully convolutional neural networks for volumetric medical image segmentation." 2016 fourth international conference on 3D vision (3DV). IEEE (2016). [https://campar.in.tum.de/pub/milletari2016Vnet/milletari2016Vnet.pdf](https://campar.in.tum.de/pub/milletari2016Vnet/milletari2016Vnet.pdf)
+* "What is a Convolutional Neural Network?" [https://poloclub.github.io/cnn-explainer/](https://poloclub.github.io/cnn-explainer/)
+* "Radiation risk from medical imaging." (2021) [https://www.health.harvard.edu/cancer/radiation-risk-from-medical-imaging](https://www.health.harvard.edu/cancer/radiation-risk-from-medical-imaging). 
+* Bundesamt für Strahlenschutz. "Natural radiation in Germany" (2022)[https://www.bfs.de/EN/topics/ion/environment/natural-radiation/natural-radiation.html](https://www.bfs.de/EN/topics/ion/environment/natural-radiation/natural-radiation.html)
+* admnucleartechnologies "What is a safe level of radiation exposure?" (2021) [https://www.admnucleartechnologies.com.au/blog/what-safe-level-radiation-exposure](https://www.admnucleartechnologies.com.au/blog/what-safe-level-radiation-exposure)
+* Goel. "PReLU activation." (2019). [https://medium.com/@shauryagoel/prelu-activation-e294bb21fefa](https://medium.com/@shauryagoel/prelu-activation-e294bb21fefa)
+* He et al. "Deep residual learning for image recognition." Proceedings of the IEEE conference on computer vision and pattern recognition (2016)[https://arxiv.org/pdf/1512.03385.pdf](https://arxiv.org/pdf/1512.03385.pdf)
 
 # Image References
 [1] Chiu et al. "Isolated Proximal Tibiofibular Dislocation during Soccer." Case Reports in Emergency Medicine 2015(6):1-3 (2015). [https://www.researchgate.net/publication/285656875_Isolated_Proximal_Tibiofibular_Dislocation_during_Soccer](https://www.researchgate.net/publication/285656875_Isolated_Proximal_Tibiofibular_Dislocation_during_Soccer)
