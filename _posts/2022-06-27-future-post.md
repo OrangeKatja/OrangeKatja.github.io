@@ -53,10 +53,12 @@ A convolutional neural network (CNN) is a neural network that uses convolutional
 
 The most important parts of a CNN are the so-called convolutional layers. Let's take a look at what a convolutional layer does: Its goal is to extract features from the input, such as detecting edges. To do this, it uses a small square called the kernel, that contains multiple weights. For convolution, the image is multiplied by the kernel (element-wise dot product) to compute the convolved feature, also called "feature map". A visualization of convolution can be seen in [figure 5](#fig:convolution). As the kernel (in yellow) moves over the image, the pixels underneath are added with the weights (small red multipliers) and the sum is entered into the feature map. The kernel moves once over all pixels and its weights of the kernel are learned during training by the CNN.
 
+<p align="center">
 <figure id="fig:convolution">
   <img src="/images/convolution.gif" alt="Convolution of a 5x5 image with a 3x3 kernel to get a 3x3 feature map" style="width:60%"/>
   <figcaption>Figure 5: Convolution of a 5x5 image with a 3x3 kernel to get a 3x3 feature map. Source: [5]</figcaption>
 </figure>
+</p>
 
 In order to be able to convolve the outer pixels as well, additional pixels can be inserted around the image. This is called padding and is shown as a white pixel in [figure 6](#fig:stride). Also, we don't need to apply the kernel to every pixel, but only to every second pixel, for example. This is called the stride and describes the number of pixels we move in the input matrix. A higher stride results in a smaller feature map, as we see in [figure 6](#fig:stride). Because of the stride of two, one pixel is always skipped there.
 
