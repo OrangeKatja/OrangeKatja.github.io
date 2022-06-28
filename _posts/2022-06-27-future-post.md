@@ -157,7 +157,7 @@ Two metrics are used to evaluate the data: the Chamfer distance in mm and the Di
 The Dice coefficient is calculated for each class on the voxels by dividing two times the overlap of the voxels by the number of class voxels in the prediction and the ground truth (see [figure 17](#fig:dice)). So a perfect prediction would give 1, and we can say the higher the Dice coefficient, the better. 
 <figure id="fig:dice">
   <img src="/images/dice.png" alt="Illustration of dice coefficient" style="width:60%"/>
-  <figcaption> Figure 17: Illustration of Dice coefficient: \[2 * X ∩ Y / (|X| + |Y|)\]. Source: [13]</figcaption>
+  <figcaption> \[\text{Figure 17: Illustration of Dice coefficient: } 2 * X ∩ Y / (|X| + |Y|) \text{. Source: [13]}\]</figcaption>
 </figure>
 
 ## Statistical Shape Models
