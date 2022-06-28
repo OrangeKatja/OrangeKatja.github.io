@@ -97,7 +97,7 @@ Let's first take a look at the left part of the model. We start with a single-ch
 
 You may have noticed that the input is not only used for the convolutional layers, but is also added to the output of the last convolutional layer of the stage. The goal of this architecture is for each stage to learn a residual function. Thus, it is not the output that is learned, but what is missing from the input (residual). It has been shown that this architecture is much faster. If you want to learn more about residual blocks and the mathematical background, read the [paper](https://arxiv.org/pdf/1512.03385.pdf) or [this blog post](https://towardsdatascience.com/residual-blocks-building-blocks-of-resnet-fd90ca15d6ec).
 
-The goal of the right part of the model is to project the extracted features back onto the pixel space. Instead of scaling the input down, we now scale it up and focus on where the features are located. So the further up we go, the higher the resolution and the lower the number of channels. For upsampling, deconvolution is performed at the end of each stage. The process is illustrated in [figure 11](#fig:deconv): the resolution is increased by projecting each input voxel to a larger region by the kernel. In our model we also see that residual functions continue to be learned and the number of channels is halved at each stage. 
+The goal of the right part of the model is to project the extracted features back onto the voxel space. Instead of scaling the input down, we now scale it up and focus on where the features are located. So the further up we go, the higher the resolution and the lower the number of channels. For upsampling, deconvolution is performed at the end of each stage. The process is illustrated in [figure 11](#fig:deconv): the resolution is increased by projecting each input voxel to a larger region by the kernel. In our model we also see that residual functions continue to be learned and the number of channels is halved at each stage. 
 
 <figure id="fig:deconv">
   <img src="/images/deconv.png" alt="Convolution and Deconvolution of a 3D volume"/>
@@ -157,14 +157,14 @@ Two metrics are used to evaluate the data: the Chamfer distance in mm and the Di
 The Dice coefficient is calculated for each class on the voxels by dividing two times the overlap of the voxels by the number of class voxels in the prediction and the ground truth (see [figure 17](#fig:dice)). So a perfect prediction would give 1, and we can say the higher the Dice coefficient, the better. 
 <figure id="fig:dice">
   <img src="/images/dice.png" alt="Illustration of dice coefficient" style="width:60%"/>
-  <figcaption> Figure 17: Illustration of Dice coefficient: 2 * X ∩ Y / (|X| + |Y|). Source: [13]</figcaption>
+  <figcaption> Figure 17: Illustration of Dice coefficient: \[2 * X ∩ Y / (|X| + |Y|)\]. Source: [13]</figcaption>
 </figure>
 
 ## Statistical Shape Models
 The paper's authers compare their results to other methods: one based on statistical shape models (SSM) and another approach also based on a CNN. Before Deep Learning was used for 3D bone reconstruction, SSM or statistical shape and intensity models (SSIM) were the most popular method. The idea is that given enough examples, we know what the average bone looks like. And similar to creating phantom images, variations are tried until the structure of the bone in question is mapped as accurately as possible. Just as the shape of the eyes can be varied when creating a phantom image, for example, the size of the femur, or the angle of the head to the shaft can be varied (see [figure 18](#fig:ssm_femur)). A disadvantage of the method is that it depends heavily on the initialization and also takes quite a lot of time.
 
 <figure id="fig:ssm_femur">
-  <img src="/images/ssm_femur_vert.png" alt="Variations of the femur shape model used in SSM models"/>
+  <img src="/images/ssm_femur_vert.png" alt="Variations of the femur shape model used in SSM models" style="width:80%"/>
   <figcaption> Figure 18: Variations of the femur shape model used in SSM models. Source: Based on [14]</figcaption>
 </figure>
 
@@ -188,7 +188,7 @@ The results are also compared with [Chen et al. "Using Bi-planar X-Ray Images to
 
 As we can see in the table, the presented approach achieved a higher Dice coefficient and a smaller 2D Chamfer distance. Moreover, no initialization was required and it converged faster than the SSIM model (no time was given for the other CNN approach). The same data was used to evaluate all three approaches.
 
- |              | Femur SSIM |           | Chen et al, 2020 | Result of the paper |         |        |        |            |
+ |              | Klima et al., 1015 (Femur SSIM) |           | Chen et al., 2020 (CNN) | Result of the paper |         |        |        |            |
 |--------------|------------|-----------|--------------|-----------------|---------|--------|--------|------------|
 |              | **Manual**     | **Perturbed** | **Femur**        | **Femur**           | **Patella** | **Tibia**  | **Fibula** | **Bones avg.** |
 | **Chamfer (mm)** | 7.529      | 8.559     | 3.984        | 1.691           | 1.198   | 1.135  | 2.873  | 1.778      |
@@ -210,11 +210,11 @@ Lastly, I would like to point out a great paper recently published in Nature tha
 * Kasten et al. "End-to-end convolutional neural network for 3D reconstruction of knee bones from bi-planar X-ray images." International Workshop on Machine Learning for Medical Image Reconstruction. Springer, Cham (2020). [https://arxiv.org/pdf/2004.00871.pdf](https://arxiv.org/pdf/2004.00871.pdf)
 * Milletari et al. "V-net: Fully convolutional neural networks for volumetric medical image segmentation." 2016 fourth international conference on 3D vision (3DV). IEEE (2016). [https://campar.in.tum.de/pub/milletari2016Vnet/milletari2016Vnet.pdf](https://campar.in.tum.de/pub/milletari2016Vnet/milletari2016Vnet.pdf)
 * "What is a Convolutional Neural Network?" [https://poloclub.github.io/cnn-explainer/](https://poloclub.github.io/cnn-explainer/)
-* "Radiation risk from medical imaging." (2021) [https://www.health.harvard.edu/cancer/radiation-risk-from-medical-imaging](https://www.health.harvard.edu/cancer/radiation-risk-from-medical-imaging). 
-* Bundesamt für Strahlenschutz. "Natural radiation in Germany" (2022)[https://www.bfs.de/EN/topics/ion/environment/natural-radiation/natural-radiation.html](https://www.bfs.de/EN/topics/ion/environment/natural-radiation/natural-radiation.html)
-* admnucleartechnologies "What is a safe level of radiation exposure?" (2021) [https://www.admnucleartechnologies.com.au/blog/what-safe-level-radiation-exposure](https://www.admnucleartechnologies.com.au/blog/what-safe-level-radiation-exposure)
+* "Radiation risk from medical imaging." (2021). [https://www.health.harvard.edu/cancer/radiation-risk-from-medical-imaging](https://www.health.harvard.edu/cancer/radiation-risk-from-medical-imaging). 
+* Bundesamt für Strahlenschutz. "Natural radiation in Germany" (2022).[https://www.bfs.de/EN/topics/ion/environment/natural-radiation/natural-radiation.html](https://www.bfs.de/EN/topics/ion/environment/natural-radiation/natural-radiation.html)
+* admnucleartechnologies "What is a safe level of radiation exposure?" (2021). [https://www.admnucleartechnologies.com.au/blog/what-safe-level-radiation-exposure](https://www.admnucleartechnologies.com.au/blog/what-safe-level-radiation-exposure)
 * Goel. "PReLU activation." (2019). [https://medium.com/@shauryagoel/prelu-activation-e294bb21fefa](https://medium.com/@shauryagoel/prelu-activation-e294bb21fefa)
-* He et al. "Deep residual learning for image recognition." Proceedings of the IEEE conference on computer vision and pattern recognition (2016)[https://arxiv.org/pdf/1512.03385.pdf](https://arxiv.org/pdf/1512.03385.pdf)
+* He et al. "Deep residual learning for image recognition." Proceedings of the IEEE conference on computer vision and pattern recognition (2016).[https://arxiv.org/pdf/1512.03385.pdf](https://arxiv.org/pdf/1512.03385.pdf)
 
 # Image References
 [1] Chiu et al. "Isolated Proximal Tibiofibular Dislocation during Soccer." Case Reports in Emergency Medicine 2015(6):1-3 (2015). [https://www.researchgate.net/publication/285656875_Isolated_Proximal_Tibiofibular_Dislocation_during_Soccer](https://www.researchgate.net/publication/285656875_Isolated_Proximal_Tibiofibular_Dislocation_during_Soccer)
